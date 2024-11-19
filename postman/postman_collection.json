@@ -7,8 +7,78 @@
 	},
 	"item": [
 		{
-			"name": "Persons",
+			"name": "Person",
 			"item": [
+				{
+					"name": "History",
+					"item": [
+						{
+							"name": "Show All Persons History",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/history/persons",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"history",
+										"persons"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Show Person History",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/history/persons/{{createdUserId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"history",
+										"persons",
+										"{{createdUserId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Person History",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/history/persons/{{createdUserId}}/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"history",
+										"persons",
+										"{{createdUserId}}",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Restore Person History",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
 				{
 					"name": "List Persons",
 					"request": {
@@ -105,7 +175,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"dateOfBirth\": \"1980-01-01\",\n    \"middleName\": \"Jim\"\n}",
+							"raw": "{\n    \"dateOfBirth\": \"1980-01-01\",\n    \"givenName\": \"John\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
