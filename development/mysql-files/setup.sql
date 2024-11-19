@@ -7,7 +7,8 @@ set foreign_key_checks = 0;
 
 create table `person` (
     `id` int unsigned not null auto_increment,
-    `_v` int unsigned not null default 1,
+    `version` int unsigned not null default 1,
+    `base_version` int unsigned default null,
 
     `family_name` varchar(80) default null,
     `given_name` varchar(80) default null,
@@ -28,7 +29,8 @@ create table `person` (
 
 create table `_person` (
     `id` int unsigned not null,
-    `_v` int unsigned not null,
+    `version` int unsigned not null,
+    `base_version` int unsigned null,
 
     `family_name` varchar(80) default null,
     `given_name` varchar(80) default null,
@@ -43,7 +45,7 @@ create table `_person` (
     `updated` datetime not null,
     `deleted` datetime null,
 
-    primary key (`id`, `_v`),
+    primary key (`id`, `version`),
     foreign key (`id`) references `person` (`id`) on delete cascade on update cascade
 ) engine=innodb;
 
@@ -52,11 +54,11 @@ set foreign_key_checks = 1;
 delimiter //
 
 create trigger `person_before_update` before update on `person` for each row begin
-    set new.`_v` = old.`_v` + 1;
+    set new.`version` = old.`version` + 1;
 end //
 create trigger `person_after_update` after update on `person` for each row begin
-    insert into `_person` (`id`, `_v`, `family_name`, `given_name`, `middle_name`, `birth_name`, `maternal_name`, `hon_prefixes`, `hon_suffixes`, `date_of_birth`, `created`, `updated`, `deleted`)
-    values (old.`id`, old.`_v`, old.`family_name`, old.`given_name`, old.`middle_name`, old.`birth_name`, old.`maternal_name`, old.`hon_prefixes`, old.`hon_suffixes`, old.`date_of_birth`, old.`created`, old.`updated`, old.`deleted`);
+    insert into `_person` (`id`, `version`, `base_version`, `family_name`, `given_name`, `middle_name`, `birth_name`, `maternal_name`, `hon_prefixes`, `hon_suffixes`, `date_of_birth`, `created`, `updated`, `deleted`)
+    values (old.`id`, old.`version`, old.`base_version`, old.`family_name`, old.`given_name`, old.`middle_name`, old.`birth_name`, old.`maternal_name`, old.`hon_prefixes`, old.`hon_suffixes`, old.`date_of_birth`, old.`created`, old.`updated`, old.`deleted`);
 end //
 create trigger `person_before_delete` before delete on `person` for each row begin
     if @allow_delete is null or @allow_delete = false then

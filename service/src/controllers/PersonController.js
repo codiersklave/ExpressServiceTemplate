@@ -22,7 +22,16 @@ export class PersonController {
       const result = await personService.deletePerson(req.params.personId);
       res.status(204).json();
     } catch (error) {
-      res.status(500).json({error: error.message, stack: error.stack});
+      res.status(500).json({error: error.message});
+    }
+  }
+
+  static async deletePersonHistory(req, res) {
+    try {
+      const result = await personService.deletePersonHistory(req.params.personId, req.params.version);
+      res.status(204).json();
+    } catch (error) {
+      res.status(500).json({error: error.message});
     }
   }
 
@@ -59,7 +68,7 @@ export class PersonController {
     }
   }
 
-  static async findPersonHistory(req, res) {
+  static async fetchPersonHistory(req, res) {
     try {
       const history = await personService.findPersonHistory(req.params.personId);
       res.status(200).json({history});
@@ -68,6 +77,19 @@ export class PersonController {
         return res.status(error.httpStatus).json({error: error.message});
       }
       
+      res.status(500).json({error: error.message});
+    }
+  }
+
+  static async restorePersonHistory(req, res) {
+    try {
+      const person = await personService.restorePersonHistory(req.params.personId, req.params.version);
+      res.status(200).json(person);
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        return res.status(error.httpStatus).json({error: error.message});
+      }
+
       res.status(500).json({error: error.message});
     }
   }

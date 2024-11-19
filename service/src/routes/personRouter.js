@@ -12,7 +12,9 @@ export const personRouter = () => {
   router.patch('/persons/:personId/undelete', PersonController.undeletePerson);
 
   router.get('/history/persons', PersonController.fetchPersonsHistory);
-  router.get('/history/persons/:personId', PersonController.findPersonHistory);
+  router.get('/history/persons/:personId', PersonController.fetchPersonHistory);
+  router.delete('/history/persons/:personId/:version', PersonController.deletePersonHistory);
+  router.patch('/history/persons/:personId/:version/restore', PersonController.restorePersonHistory);
 
   return router;
 }

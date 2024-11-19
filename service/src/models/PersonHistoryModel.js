@@ -9,7 +9,10 @@ export default (sequelize) => {
     version: {
       type: DataTypes.INTEGER.UNSIGNED,
       primaryKey: true,
-      field: '_v',
+    },
+    baseVersion: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
     },
     familyName: {
       type: DataTypes.STRING(80),

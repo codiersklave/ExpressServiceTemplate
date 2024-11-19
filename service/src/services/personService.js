@@ -35,6 +35,17 @@ class PersonService {
     return false;
   }
 
+  async deletePersonHistory(id, version) {
+    const personHistory = await db.PersonHistoryModel.findOne({where: {id, version}});
+
+    if (personHistory) {
+      await personHistory.destroy();
+      return true;
+    }
+
+    return false;
+  }
+
   async fetchPersons(options = {}, showDeleted = false) {
     if (!showDeleted) {
       options.where = {deleted: null};
@@ -64,6 +75,40 @@ class PersonService {
     }
 
     return history;
+  }
+
+  async restorePersonHistory(id, version) {
+    const person = await db.PersonModel.findByPk(id);
+
+    if (!person) {
+      throw new NotFoundError(`Person ${id} does not exist`);
+    }
+
+    const history = await db.PersonHistoryModel.findOne({where: {id, version}});
+
+    if (!history) {
+      throw new NotFoundError(`History version ${version} does not exist for person ${id}`);
+    }
+
+    await person.update({
+      baseVersion: version,
+      familyName: history.familyName,
+      givenName: history.givenName,
+      middleName: history.middleName,
+      birthName: history.birthName,
+      maternalName: history.maternalName,
+      honPrefixes: history.honPrefixes,
+      honSuffixes: history.honSuffixes,
+      dateOfBirth: history.dateOfBirth,
+      deleted: history.deleted,
+    });
+
+    await person.reload({
+      include: [],
+      useMaster: true,
+    });
+
+    return person;
   }
 
   async undeletePerson(id) {
