@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  service_db:
+    container_name: service_db
+    image: mysql:8.0.31
+    restart: 'no'
+    networks:
+      - service-net
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_PORT: "${MYSQL_PORT}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_LOWER_CASE_TABLE_NAMES: 0
+    ports:
+      - "${MYSQL_PORT}:3306"
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+      - ./mysql-files:/var/lib/mysql-files
+
+volumes:
+  mysql-data:
+  mysql-files:
+
+networks:
+  service-net:
+    driver: bridge

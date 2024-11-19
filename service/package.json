@@ -1,0 +1,46 @@
+{
+  "name": "express-service",
+  "version": "0.1",
+  "main": "src/server.js",
+  "author": "Alexander Serbe <alex@waschberserker.com>",
+  "license": "MIT",
+  "description": "TBD",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/unit & npx cypress run",
+    "test:e2e": "npx cypress run",
+    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/unit"
+  },
+  "imports": {
+    "#config/*": "./src/config/*.js",
+    "#controllers/*": "./src/controllers/*.js",
+    "#errors/*": "./src/errors/*.js",
+    "#lib/*": "./src/lib/*.js",
+    "#middlewares/*": "./src/middlewares/*.js",
+    "#models/*": "./src/models/*.js",
+    "#routes/*": "./src/routes/*.js",
+    "#schemas/*": "./src/schemas/*.js",
+    "#services/*": "./src/services/*.js",
+    "#src/*": "./src/**/*.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "dayjs": "^1.11.13",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "joi": "^17.13.3",
+    "mysql2": "^3.11.4",
+    "sequelize": "^6.37.5"
+  },
+  "devDependencies": {
+    "@types/cypress": "^0.1.6",
+    "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.14",
+    "@types/joi": "^17.2.2",
+    "cypress": "^13.15.2",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.7"
+  }
+}
