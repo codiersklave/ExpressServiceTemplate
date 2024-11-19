@@ -12,7 +12,9 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 // Import models
+import PersonModel from "#models/PersonModel";
 
 // Add models
+db.PersonModel = PersonModel(sequelize);
 
 export default db;

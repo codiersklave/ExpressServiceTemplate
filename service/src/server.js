@@ -5,8 +5,10 @@ import dotenv from "dotenv";
 import db from "#models/index";
 
 // Import middlewares
+import {responseWrapper} from "#middlewares/responseWrapper";
 
 // Import routers
+import {personRouter} from "#routes/personRouter";
 
 dotenv.config();
 
@@ -15,9 +17,9 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-app.get('/foo', (req, res, next) => {
-  res.json({foo: 'bar'});
-});
+app.use(responseWrapper);
+
+app.use(personRouter());
 
 db.sequelize.sync().then(() => {
   app.listen(PORT, () => {
