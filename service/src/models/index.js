@@ -5,6 +5,7 @@ const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.p
   host: dbConfig.host,
   dialect: dbConfig.dialect,
   port: dbConfig.port,
+  logging: false, // comment this line out to enable logging
 });
 
 const db = {};
