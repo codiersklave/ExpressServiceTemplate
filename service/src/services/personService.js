@@ -4,6 +4,7 @@ import {PersonCreateSchema} from "#schemas/PersonCreateSchema";
 import {ValidationError} from "#errors/ValidationError";
 import {PersonUpdateSchema} from "#schemas/PersonUpdateSchema";
 import dayjs from "dayjs";
+import {LogicError} from "#errors/LogicError";
 
 class PersonService {
   async createPerson(data) {
@@ -34,8 +35,8 @@ class PersonService {
     return false;
   }
 
-  async fetchPersons(options = {}) {
-    if (Object.keys(options).length === 0) {
+  async fetchPersons(options = {}, showDeleted = false) {
+    if (!showDeleted) {
       options.where = {deleted: null};
     }
     return await db.PersonModel.findAll(options);
@@ -45,10 +46,10 @@ class PersonService {
     return await db.PersonHistoryModel.findAll(options);
   }
 
-  async findPerson(id) {
+  async findPerson(id, showDeleted = false) {
     const person = await db.PersonModel.findByPk(id);
 
-    if (!person) {
+    if (!person || (!showDeleted && person.deleted !== null)) {
       throw new NotFoundError(`Person ${id} does not exist`);
     }
 
@@ -65,8 +66,29 @@ class PersonService {
     return history;
   }
 
+  async undeletePerson(id) {
+    const person = await db.PersonModel.findOne({where: {id}});
+
+    if (!person) {
+      throw new NotFoundError(`Person ${id} does not exist`);
+    }
+
+    if (person.deleted === null) {
+      throw new LogicError(`Person ${id} is not deleted`);
+    }
+
+    await person.update({deleted: null});
+
+    await person.reload({
+      include: [],
+      useMaster: true,
+    });
+
+    return person;
+  }
+
   async updatePerson(id, data) {
-    const person = await db.PersonModel.findByPk(id);
+    const person = await db.PersonModel.findOne({where: {id, deleted: null}});
 
     if (!person) {
       throw new NotFoundError(`Person ${id} does not exist`);

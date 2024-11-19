@@ -1,6 +1,7 @@
 import {personService} from "#services/personService";
 import {NotFoundError} from "#errors/NotFoundError";
 import {ValidationError} from "#errors/ValidationError";
+import {LogicError} from "#errors/LogicError";
 
 export class PersonController {
   static async createPerson(req, res) {
@@ -27,7 +28,8 @@ export class PersonController {
 
   static async fetchPersons(req, res) {
     try {
-      const persons = await personService.fetchPersons({});
+      const showDeleted = req.query.hasOwnProperty('showDeleted') && req.query.showDeleted === "1";
+      const persons = await personService.fetchPersons({}, showDeleted);
       res.status(200).json({persons});
     } catch (error) {
       res.status(500).json({error: error.message});
@@ -45,7 +47,8 @@ export class PersonController {
 
   static async findPerson(req, res) {
     try {
-      const person = await personService.findPerson(req.params.personId);
+      const showDeleted = req.query.hasOwnProperty('showDeleted') && req.query.showDeleted === "1";
+      const person = await personService.findPerson(req.params.personId, showDeleted);
       res.status(200).json(person);
     } catch (error) {
       if (error instanceof NotFoundError) {
@@ -65,6 +68,19 @@ export class PersonController {
         return res.status(error.httpStatus).json({error: error.message});
       }
       
+      res.status(500).json({error: error.message});
+    }
+  }
+
+  static async undeletePerson(req, res) {
+    try {
+      const person = await personService.undeletePerson(req.params.personId);
+      res.status(200).json(person);
+    } catch (error) {
+      if (error instanceof NotFoundError || error instanceof LogicError) {
+        return res.status(error.httpStatus).json({error: error.message});
+      }
+
       res.status(500).json({error: error.message});
     }
   }
