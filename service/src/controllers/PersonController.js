@@ -34,6 +34,15 @@ export class PersonController {
     }
   }
 
+  static async fetchPersonsHistory(req, res) {
+    try {
+      const history = await personService.fetchPersonsHistory({});
+      res.status(200).json({history});
+    } catch (error) {
+      res.status(500).json({error: error.message});
+    }
+  }
+
   static async findPerson(req, res) {
     try {
       const person = await personService.findPerson(req.params.personId);
@@ -43,6 +52,19 @@ export class PersonController {
         return res.status(error.httpStatus).json({error: error.message});
       }
 
+      res.status(500).json({error: error.message});
+    }
+  }
+
+  static async findPersonHistory(req, res) {
+    try {
+      const history = await personService.findPersonHistory(req.params.personId);
+      res.status(200).json({history});
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        return res.status(error.httpStatus).json({error: error.message});
+      }
+      
       res.status(500).json({error: error.message});
     }
   }

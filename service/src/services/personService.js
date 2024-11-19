@@ -41,6 +41,10 @@ class PersonService {
     return await db.PersonModel.findAll(options);
   }
 
+  async fetchPersonsHistory(options = {}) {
+    return await db.PersonHistoryModel.findAll(options);
+  }
+
   async findPerson(id) {
     const person = await db.PersonModel.findByPk(id);
 
@@ -49,6 +53,16 @@ class PersonService {
     }
 
     return person;
+  }
+
+  async findPersonHistory(id) {
+    const history = await db.PersonHistoryModel.findAll({where: {id}});
+
+    if (history.length === 0) {
+      throw new NotFoundError(`No history entries found for person ${id}`);
+    }
+
+    return history;
   }
 
   async updatePerson(id, data) {

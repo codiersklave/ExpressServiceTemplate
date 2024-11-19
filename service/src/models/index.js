@@ -13,8 +13,10 @@ db.sequelize = sequelize;
 
 // Import models
 import PersonModel from "#models/PersonModel";
+import PersonHistoryModel from "#models/PersonHistoryModel";
 
 // Add models
 db.PersonModel = PersonModel(sequelize);
+db.PersonHistoryModel = PersonHistoryModel(sequelize);
 
 export default db;

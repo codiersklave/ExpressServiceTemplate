@@ -10,5 +10,8 @@ export const personRouter = () => {
   router.get('/persons/:personId', PersonController.findPerson);
   router.patch('/persons/:personId', PersonController.updatePerson);
 
+  router.get('/history/persons', PersonController.fetchPersonsHistory);
+  router.get('/history/persons/:personId', PersonController.findPersonHistory);
+
   return router;
 }
