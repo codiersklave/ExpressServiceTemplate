@@ -22,7 +22,8 @@ create table `person` (
     `updated` datetime not null default current_timestamp() on update current_timestamp(),
     `deleted` datetime default null,
 
-    primary key (`id`)
+    primary key (`id`),
+    constraint `chk_family_or_given_name` check (`family_name` is not null or `given_name` is not null)
 ) engine=innodb;
 
 create table `_person` (
