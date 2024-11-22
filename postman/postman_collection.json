@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "11c999e7-5acf-4452-92fc-12e38e6876c1",
+		"_postman_id": "33cd821d-25b1-49f1-b2d9-3b1cf5896978",
 		"name": "Express Service Template",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21342798"
@@ -15,8 +15,24 @@
 						{
 							"name": "Show All Persons History",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "x-api-key",
+										"value": "{{apiTestKey}}",
+										"type": "text"
+									}
+								],
 								"url": {
 									"raw": "{{baseUrl}}/history/persons",
 									"host": [
@@ -33,17 +49,39 @@
 						{
 							"name": "Show Person History",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "x-api-key",
+										"value": "{{apiTestKey}}",
+										"type": "text"
+									}
+								],
 								"url": {
-									"raw": "{{baseUrl}}/history/persons/{{createdUserId}}",
+									"raw": "{{baseUrl}}/history/persons/:personId",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"history",
 										"persons",
-										"{{createdUserId}}"
+										":personId"
+									],
+									"variable": [
+										{
+											"key": "personId",
+											"value": "{{personId}}"
+										}
 									]
 								}
 							},
@@ -52,18 +90,40 @@
 						{
 							"name": "Delete Person History",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "DELETE",
-								"header": [],
+								"header": [
+									{
+										"key": "x-api-key",
+										"value": "{{apiTestKey}}",
+										"type": "text"
+									}
+								],
 								"url": {
-									"raw": "{{baseUrl}}/history/persons/{{createdUserId}}/1",
+									"raw": "{{baseUrl}}/history/persons/:personId/1",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"history",
 										"persons",
-										"{{createdUserId}}",
+										":personId",
 										"1"
+									],
+									"variable": [
+										{
+											"key": "personId",
+											"value": "{{personId}}"
+										}
 									]
 								}
 							},
@@ -72,8 +132,47 @@
 						{
 							"name": "Restore Person History",
 							"request": {
-								"method": "GET",
-								"header": []
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "x-api-key",
+										"value": "{{apiTestKey}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/history/persons/:personId/:version/restore",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"history",
+										"persons",
+										":personId",
+										":version",
+										"restore"
+									],
+									"variable": [
+										{
+											"key": "personId",
+											"value": "{{personId}}"
+										},
+										{
+											"key": "version",
+											"value": "2"
+										}
+									]
+								}
 							},
 							"response": []
 						}
@@ -83,7 +182,13 @@
 					"name": "List Persons",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "098f6bcd4621d373cade4e832627b4f6",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "{{baseUrl}}/persons",
 							"host": [
@@ -111,7 +216,7 @@
 							"script": {
 								"exec": [
 									"const jsonData = pm.response.json();",
-									"pm.collectionVariables.set(\"createdUserId\", jsonData.payload.id);",
+									"pm.collectionVariables.set(\"personId\", jsonData.payload.id);",
 									""
 								],
 								"type": "text/javascript",
@@ -120,8 +225,24 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{apiTestKey}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"familyName\": \"Doe\",\n    \"givenName\": \"Joe\"\n}",
@@ -147,21 +268,33 @@
 					"name": "Show Person",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{apiTestKey}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "{{baseUrl}}/persons/{{createdUserId}}",
+							"raw": "{{baseUrl}}/persons/:personId",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"persons",
-								"{{createdUserId}}"
+								":personId"
 							],
 							"query": [
 								{
 									"key": "showDeleted",
 									"value": "1",
 									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "personId",
+									"value": "{{personId}}"
 								}
 							]
 						}
@@ -171,8 +304,24 @@
 				{
 					"name": "Update Person",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
-						"header": [],
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{apiTestKey}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"dateOfBirth\": \"1980-01-01\",\n    \"givenName\": \"John\"\n}",
@@ -183,13 +332,19 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/persons/{{createdUserId}}",
+							"raw": "{{baseUrl}}/persons/:personId",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"persons",
-								"{{createdUserId}}"
+								":personId"
+							],
+							"variable": [
+								{
+									"key": "personId",
+									"value": "{{personId}}"
+								}
 							]
 						}
 					},
@@ -198,16 +353,38 @@
 				{
 					"name": "Delete Person",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{apiTestKey}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "{{baseUrl}}/persons/{{createdUserId}}",
+							"raw": "{{baseUrl}}/persons/:personId",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"persons",
-								"{{createdUserId}}"
+								":personId"
+							],
+							"variable": [
+								{
+									"key": "personId",
+									"value": "{{personId}}"
+								}
 							]
 						}
 					},
@@ -216,17 +393,136 @@
 				{
 					"name": "Undelete Person",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
-						"header": [],
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{apiTestKey}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "{{baseUrl}}/persons/{{createdUserId}}/undelete",
+							"raw": "{{baseUrl}}/persons/:personId/undelete",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"persons",
-								"{{createdUserId}}",
+								":personId",
 								"undelete"
+							],
+							"variable": [
+								{
+									"key": "personId",
+									"value": "{{personId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{apiTestKey}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"info@test.com\",\n    \"password\": \"$test1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Authorize (Get Token)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"pm.collectionVariables.set(\"token\", jsonData.payload.token);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{apiTestKey}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "x-api-key",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"info@test.com\",\n    \"password\": \"$test1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth"
 							]
 						}
 					},
@@ -264,7 +560,16 @@
 			"type": "string"
 		},
 		{
-			"key": "createdUserId",
+			"key": "apiTestKey",
+			"value": "098f6bcd4621d373cade4e832627b4f6",
+			"type": "string"
+		},
+		{
+			"key": "personId",
+			"value": ""
+		},
+		{
+			"key": "token",
 			"value": ""
 		}
 	]

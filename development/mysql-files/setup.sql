@@ -167,3 +167,6 @@ delimiter ;
 
 insert into `client` (`id`, `name`, `api_key`)
 values (1, 'Test Client', md5('test'));
+
+insert into `user` (`id`, `email`, `password`)
+values (1, 'info@test.com', '$2b$10$5ca3viGkgEuLofngZjMjnePsymUfgFA.LB921rhBzwkL/7F7VnUDK');

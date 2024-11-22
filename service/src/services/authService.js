@@ -10,7 +10,6 @@ dotenv.config();
 class AuthService {
   async login(email, password) {
     const user = await db.UserModel.findOne({where: {email}});
-    console.log(user);
     if (!user) {
       throw new AuthError();
     }
