@@ -1,7 +1,4 @@
 import {personService} from "#services/personService";
-import {NotFoundError} from "#errors/NotFoundError";
-import {ValidationError} from "#errors/ValidationError";
-import {LogicError} from "#errors/LogicError";
 import {asyncHandler} from "#middlewares/asyncHandler";
 
 export class PersonController {

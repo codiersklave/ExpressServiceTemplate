@@ -1,5 +1,4 @@
 import {authService} from "#services/authService";
-import {AuthError} from "#errors/AuthError";
 import {asyncHandler} from "#middlewares/asyncHandler";
 
 export class AuthController {

@@ -1,5 +1,4 @@
 import {userService} from "#services/userService";
-import {ValidationError} from "#errors/ValidationError";
 import {asyncHandler} from "#middlewares/asyncHandler";
 
 export class UserController {
