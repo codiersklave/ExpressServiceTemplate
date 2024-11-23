@@ -23,17 +23,27 @@ export default (sequelize) => {
     password: {
       type: DataTypes.STRING(255),
     },
-    deleted: {
+    createdBy: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
+    },
+    updatedBy: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
+    },
+    deletedAt: {
       type: DataTypes.DATE,
       allowNull: true,
-    }
+    },
+    deletedBy: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
+    },
   }, {
     sequelize,
     underscored: true,
     tableName: 'user',
     timestamps: true,
-    createdAt: 'created',
-    updatedAt: 'updated',
     hooks: {
       beforeCreate: async (user) => {
         const salt = await bcrypt.genSalt(10);
@@ -43,7 +53,18 @@ export default (sequelize) => {
   });
 
   UserModel.associate = (models) => {
-
+    UserModel.belongsTo(models.UserModel, {
+      foreignKey: 'createdBy',
+      as: 'creator',
+    });
+    UserModel.belongsTo(models.UserModel, {
+      foreignKey: 'updatedBy',
+      as: 'updater',
+    });
+    UserModel.belongsTo(models.UserModel, {
+      foreignKey: 'deletedBy',
+      as: 'deleter',
+    });
   }
 
   return UserModel;

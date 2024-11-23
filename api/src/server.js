@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import morgan from "morgan";
 import dotenv from "dotenv";
 
 import db from "#models/index";
@@ -26,6 +27,10 @@ app.use(apiKeyAuth);
 app.use(personRouter());
 app.use(userRouter());
 app.use(authRouter());
+
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 db.sequelize.sync().then(() => {
   app.listen(PORT, () => {

@@ -6,7 +6,7 @@ import {LogicError} from "#errors/LogicError";
 export class PersonController {
   static async createPerson(req, res) {
     try {
-      const person = await personService.createPerson(req.body);
+      const person = await personService.createPerson(req.body, req?.user);
       res.status(201).json(person);
     } catch (error) {
       if (error instanceof ValidationError) {
@@ -19,7 +19,7 @@ export class PersonController {
 
   static async deletePerson(req, res) {
     try {
-      const result = await personService.deletePerson(req.params.personId);
+      const result = await personService.deletePerson(req.params.personId, req?.user);
       res.status(204).json();
     } catch (error) {
       res.status(500).json({error: error.message});
@@ -83,7 +83,7 @@ export class PersonController {
 
   static async restorePersonHistory(req, res) {
     try {
-      const person = await personService.restorePersonHistory(req.params.personId, req.params.version);
+      const person = await personService.restorePersonHistory(req.params.personId, req.params.version, req?.user);
       res.status(200).json(person);
     } catch (error) {
       if (error instanceof NotFoundError) {
@@ -96,7 +96,7 @@ export class PersonController {
 
   static async undeletePerson(req, res) {
     try {
-      const person = await personService.undeletePerson(req.params.personId);
+      const person = await personService.undeletePerson(req.params.personId, req?.user);
       res.status(200).json(person);
     } catch (error) {
       if (error instanceof NotFoundError || error instanceof LogicError) {
@@ -109,7 +109,7 @@ export class PersonController {
 
   static async updatePerson(req, res) {
     try {
-      const person = await personService.updatePerson(req.params.personId, req.body);
+      const person = await personService.updatePerson(req.params.personId, req.body, req?.user);
       res.status(200).json(person);
     } catch (error) {
       if (error instanceof NotFoundError) {

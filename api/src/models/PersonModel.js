@@ -47,21 +47,42 @@ export default (sequelize) => {
       type: DataTypes.DATEONLY,
       allowNull: true,
     },
-    deleted: {
+    createdBy: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
+    },
+    updatedBy: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
+    },
+    deletedAt: {
       type: DataTypes.DATE,
       allowNull: true,
-    }
+    },
+    deletedBy: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
+    },
   }, {
     sequelize,
     underscored: true,
     tableName: 'person',
     timestamps: true,
-    createdAt: 'created',
-    updatedAt: 'updated',
   });
 
   PersonModel.associate = (models) => {
-
+    PersonModel.belongsTo(models.UserModel, {
+      foreignKey: 'createdBy',
+      as: 'creator',
+    });
+    PersonModel.belongsTo(models.UserModel, {
+      foreignKey: 'updatedBy',
+      as: 'updater',
+    });
+    PersonModel.belongsTo(models.UserModel, {
+      foreignKey: 'deletedBy',
+      as: 'deleter',
+    });
   }
 
   return PersonModel;

@@ -7,11 +7,16 @@ import dayjs from "dayjs";
 import {LogicError} from "#errors/LogicError";
 
 class PersonService {
-  async createPerson(data) {
+  async createPerson(data, user = null) {
     const validated = PersonCreateSchema.validate(data, { abortEarly: false });
 
     if (validated.error) {
       throw new ValidationError(validated.error.toString());
+    }
+
+    if (user) {
+      data.createdBy = user.id;
+      data.updatedBy = user.id;
     }
 
     const person = await db.PersonModel.create(data);
@@ -24,11 +29,19 @@ class PersonService {
     return person;
   }
 
-  async deletePerson(id) {
+  async deletePerson(id, user = null) {
     const person = await db.PersonModel.findByPk(id);
 
     if (person) {
-      await person.update({deleted: dayjs().format('YYYY-MM-DD HH:mm:ss.ms')});
+      const data = {
+        deletedAt: dayjs().format('YYYY-MM-DD HH:mm:ss.ms'),
+      };
+
+      if (user) {
+        data.deletedBy = user.id;
+      }
+
+      await person.update(data);
       return true;
     }
 
@@ -48,7 +61,7 @@ class PersonService {
 
   async fetchPersons(options = {}, showDeleted = false) {
     if (!showDeleted) {
-      options.where = {deleted: null};
+      options.where = {deletedAt: null};
     }
     return await db.PersonModel.findAll(options);
   }
@@ -60,7 +73,7 @@ class PersonService {
   async findPerson(id, showDeleted = false) {
     const person = await db.PersonModel.findByPk(id);
 
-    if (!person || (!showDeleted && person.deleted !== null)) {
+    if (!person || (!showDeleted && person.deletedAt !== null)) {
       throw new NotFoundError(`Person ${id} does not exist`);
     }
 
@@ -77,7 +90,7 @@ class PersonService {
     return history;
   }
 
-  async restorePersonHistory(id, version) {
+  async restorePersonHistory(id, version, user = null) {
     const person = await db.PersonModel.findByPk(id);
 
     if (!person) {
@@ -90,7 +103,7 @@ class PersonService {
       throw new NotFoundError(`History version ${version} does not exist for person ${id}`);
     }
 
-    await person.update({
+    const data = {
       baseVersion: version,
       familyName: history.familyName,
       givenName: history.givenName,
@@ -101,7 +114,13 @@ class PersonService {
       honSuffixes: history.honSuffixes,
       dateOfBirth: history.dateOfBirth,
       deleted: history.deleted,
-    });
+    };
+
+    if (user) {
+      data.updatedBy = user.id;
+    }
+
+    await person.update(data);
 
     await person.reload({
       include: [],
@@ -111,18 +130,27 @@ class PersonService {
     return person;
   }
 
-  async undeletePerson(id) {
+  async undeletePerson(id, user = null) {
     const person = await db.PersonModel.findOne({where: {id}});
 
     if (!person) {
       throw new NotFoundError(`Person ${id} does not exist`);
     }
 
-    if (person.deleted === null) {
+    if (person.deletedAt === null) {
       throw new LogicError(`Person ${id} is not deleted`);
     }
 
-    await person.update({deleted: null});
+    const data = {
+      deletedAt: null,
+      deletedBy: null,
+    };
+
+    if (user) {
+      data.updatedBy = user.id;
+    }
+
+    await person.update(data);
 
     await person.reload({
       include: [],
@@ -132,8 +160,8 @@ class PersonService {
     return person;
   }
 
-  async updatePerson(id, data) {
-    const person = await db.PersonModel.findOne({where: {id, deleted: null}});
+  async updatePerson(id, data, user = null) {
+    const person = await db.PersonModel.findOne({where: {id, deletedAt: null}});
 
     if (!person) {
       throw new NotFoundError(`Person ${id} does not exist`);
@@ -143,6 +171,10 @@ class PersonService {
 
     if (validated.error) {
       throw new ValidationError(validated.error.toString());
+    }
+
+    if (user) {
+      data.updatedBy = user.id;
     }
 
     await person.update(data);

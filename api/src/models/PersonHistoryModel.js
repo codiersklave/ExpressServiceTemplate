@@ -46,14 +46,26 @@ export default (sequelize) => {
       type: DataTypes.DATEONLY,
       allowNull: true,
     },
-    created: {
+    createdAt: {
       type: DataTypes.DATE,
     },
-    updated: {
+    createdBy: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
+    },
+    updatedAt: {
       type: DataTypes.DATE,
     },
-    deleted: {
+    updatedBy: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
+    },
+    deletedAt: {
       type: DataTypes.DATE,
+      allowNull: true,
+    },
+    deletedBy: {
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: true,
     },
   }, {

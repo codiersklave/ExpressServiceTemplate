@@ -13,11 +13,17 @@ create table `client` (
     `name` varchar(255) not null unique,
     `api_key` varchar(255) not null unique,
 
-    `created` datetime not null default current_timestamp(),
-    `updated` datetime not null default current_timestamp() on update current_timestamp(),
-    `deleted` datetime default null,
+    `created_at` datetime not null default current_timestamp(),
+    `created_by` int unsigned default null,
+    `updated_at` datetime not null default current_timestamp() on update current_timestamp(),
+    `updated_by` int unsigned default null,
+    `deleted_at` datetime default null,
+    `deleted_by` int unsigned default null,
 
-    primary key (`id`)
+    primary key (`id`),
+    foreign key (`created_by`) references `user` (`id`),
+    foreign key (`updated_by`) references `user` (`id`),
+    foreign key (`deleted_by`) references `user` (`id`)
 ) engine=innodb;
 
 create table `_client` (
@@ -28,9 +34,12 @@ create table `_client` (
     `name` varchar(255) not null,
     `api_key` varchar(255) not null,
 
-    `created` datetime not null,
-    `updated` datetime not null,
-    `deleted` datetime null,
+    `created_at` datetime not null,
+    `created_by` int unsigned null,
+    `updated_at` datetime not null,
+    `updated_by` int unsigned null,
+    `deleted_at` datetime null,
+    `deleted_by` int unsigned null,
 
     primary key (`id`, `version`),
     foreign key (`id`) references `client` (`id`) on delete cascade
@@ -50,11 +59,17 @@ create table `person` (
     `hon_suffixes` varchar(160) default null,
     `date_of_birth` date default null,
 
-    `created` datetime not null default current_timestamp(),
-    `updated` datetime not null default current_timestamp() on update current_timestamp(),
-    `deleted` datetime default null,
+    `created_at` datetime not null default current_timestamp(),
+    `created_by` int unsigned default null,
+    `updated_at` datetime not null default current_timestamp() on update current_timestamp(),
+    `updated_by` int unsigned default null,
+    `deleted_at` datetime default null,
+    `deleted_by` int unsigned default null,
 
     primary key (`id`),
+    foreign key (`created_by`) references `user` (`id`),
+    foreign key (`updated_by`) references `user` (`id`),
+    foreign key (`deleted_by`) references `user` (`id`),
     constraint `chk_family_or_given_name` check (`family_name` is not null or `given_name` is not null)
 ) engine=innodb;
 
@@ -72,9 +87,12 @@ create table `_person` (
     `hon_suffixes` varchar(160) default null,
     `date_of_birth` date default null,
 
-    `created` datetime not null,
-    `updated` datetime not null,
-    `deleted` datetime null,
+    `created_at` datetime not null,
+    `created_by` int unsigned null,
+    `updated_at` datetime not null,
+    `updated_by` int unsigned null,
+    `deleted_at` datetime null,
+    `deleted_by` int unsigned null,
 
     primary key (`id`, `version`),
     foreign key (`id`) references `person` (`id`) on delete cascade on update cascade
@@ -88,11 +106,17 @@ create table `user` (
     `email` varchar(255) not null unique,
     `password` varchar(255) not null,
 
-    `created` datetime not null default current_timestamp(),
-    `updated` datetime not null default current_timestamp() on update current_timestamp(),
-    `deleted` datetime default null,
+    `created_at` datetime not null default current_timestamp(),
+    `created_by` int unsigned default null,
+    `updated_at` datetime not null default current_timestamp() on update current_timestamp(),
+    `updated_by` int unsigned default null,
+    `deleted_at` datetime default null,
+    `deleted_by` int unsigned default null,
 
-    primary key (`id`)
+    primary key (`id`),
+    foreign key (`created_by`) references `user` (`id`),
+    foreign key (`updated_by`) references `user` (`id`),
+    foreign key (`deleted_by`) references `user` (`id`)
 ) engine=innodb;
 
 create table `_user` (
@@ -103,9 +127,12 @@ create table `_user` (
     `email` varchar(255) not null,
     `password` varchar(255) not null,
 
-    `created` datetime not null,
-    `updated` datetime not null,
-    `deleted` datetime null,
+    `created_at` datetime not null,
+    `created_by` int unsigned null,
+    `updated_at` datetime not null,
+    `updated_by` int unsigned null,
+    `deleted_at` datetime null,
+    `deleted_by` int unsigned null,
 
     primary key (`id`, `version`),
     foreign key (`id`) references `user` (`id`) on delete cascade
@@ -119,8 +146,8 @@ create trigger `client_before_update` before update on `client` for each row beg
     set new.`version` = old.`version` + 1;
 end //
 create trigger `client_after_update` after update on `client` for each row begin
-    insert into `_client` (`id`, `version`, `base_version`, `name`, `api_key`, `created`, `updated`, `deleted`)
-    values (old.`id`, old.`version`, old.`base_version`, old.`name`, old.`api_key`, old.`created`, old.`updated`, old.`deleted`);
+    insert into `_client` (`id`, `version`, `base_version`, `name`, `api_key`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`)
+    values (old.`id`, old.`version`, old.`base_version`, old.`name`, old.`api_key`, old.`created_at`, old.`created_by`, old.`updated_at`, old.`updated_by`, old.`deleted_at`, old.`deleted_by`);
 end //
 create trigger `client_before_delete` before delete on `client` for each row begin
     if @allow_delete is null or @allow_delete = false then
@@ -135,8 +162,8 @@ create trigger `person_before_update` before update on `person` for each row beg
     set new.`version` = old.`version` + 1;
 end //
 create trigger `person_after_update` after update on `person` for each row begin
-    insert into `_person` (`id`, `version`, `base_version`, `family_name`, `given_name`, `middle_name`, `birth_name`, `maternal_name`, `hon_prefixes`, `hon_suffixes`, `date_of_birth`, `created`, `updated`, `deleted`)
-    values (old.`id`, old.`version`, old.`base_version`, old.`family_name`, old.`given_name`, old.`middle_name`, old.`birth_name`, old.`maternal_name`, old.`hon_prefixes`, old.`hon_suffixes`, old.`date_of_birth`, old.`created`, old.`updated`, old.`deleted`);
+    insert into `_person` (`id`, `version`, `base_version`, `family_name`, `given_name`, `middle_name`, `birth_name`, `maternal_name`, `hon_prefixes`, `hon_suffixes`, `date_of_birth`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`)
+    values (old.`id`, old.`version`, old.`base_version`, old.`family_name`, old.`given_name`, old.`middle_name`, old.`birth_name`, old.`maternal_name`, old.`hon_prefixes`, old.`hon_suffixes`, old.`date_of_birth`, old.`created_at`, old.`created_by`, old.`updated_at`, old.`updated_by`, old.`deleted_at`, old.`deleted_by`);
 end //
 create trigger `person_before_delete` before delete on `person` for each row begin
     if @allow_delete is null or @allow_delete = false then
@@ -151,8 +178,8 @@ create trigger `user_before_update` before update on `user` for each row begin
     set new.`version` = old.`version` + 1;
 end //
 create trigger `user_after_update` after update on `user` for each row begin
-    insert into `_user` (`id`, `version`, `base_version`, `email`, `password`, `created`, `updated`, `deleted`)
-    values (old.`id`, old.`version`, old.`base_version`, old.`email`, old.`password`, old.`created`, old.`updated`, old.`deleted`);
+    insert into `_user` (`id`, `version`, `base_version`, `email`, `password`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`)
+    values (old.`id`, old.`version`, old.`base_version`, old.`email`, old.`password`, old.`created_at`, old.`created_by`, old.`updated_at`, old.`updated_by`, old.`deleted_at`, old.`deleted_by`);
 end //
 create trigger `user_before_delete` before delete on `user` for each row begin
     if @allow_delete is null or @allow_delete = false then
