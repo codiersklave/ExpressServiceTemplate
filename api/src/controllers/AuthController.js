@@ -1,5 +1,5 @@
 import {authService} from "#services/authService";
-import {asyncHandler} from "#middlewares/asyncHandler";
+import {asyncHandler} from "#utils/asyncHandler";
 
 export class AuthController {
   static login = asyncHandler(async (req, res, next) => {

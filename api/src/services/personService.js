@@ -5,6 +5,7 @@ import {ValidationError} from "#errors/ValidationError";
 import {PersonUpdateSchema} from "#schemas/PersonUpdateSchema";
 import dayjs from "dayjs";
 import {LogicError} from "#errors/LogicError";
+import {applyPagination} from "../util/pagination.js";
 
 class PersonService {
   async createPerson(data, user = null) {
@@ -59,11 +60,12 @@ class PersonService {
     return false;
   }
 
-  async fetchPersons(options = {}, showDeleted = false) {
+  async fetchPersons(options = {}, showDeleted = false, query = {}) {
     if (!showDeleted) {
       options.where = {deletedAt: null};
     }
-    return await db.PersonModel.findAll(options);
+    options = applyPagination(query, options);
+    return await db.PersonModel.findAndCountAll(options);
   }
 
   async fetchPersonsHistory(options = {}) {

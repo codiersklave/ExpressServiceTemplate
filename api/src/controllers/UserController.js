@@ -1,5 +1,5 @@
 import {userService} from "#services/userService";
-import {asyncHandler} from "#middlewares/asyncHandler";
+import {asyncHandler} from "#utils/asyncHandler";
 
 export class UserController {
   static createUser = asyncHandler(async (req, res, next) => {

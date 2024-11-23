@@ -4,7 +4,13 @@ export const responseWrapper = (req, res, next) => {
   res.json = function (data) {
     let wrappedData = data;
     if (!data?.hasOwnProperty('error')) {
-      wrappedData = { payload: data };
+      wrappedData = {};
+
+      if (res?.meta) {
+        wrappedData.meta = res.meta;
+      }
+
+      wrappedData.payload = data;
     }
 
     return originalJson.call(this, wrappedData);

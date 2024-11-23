@@ -1,5 +1,5 @@
 import {personService} from "#services/personService";
-import {asyncHandler} from "#middlewares/asyncHandler";
+import {asyncHandler} from "#utils/asyncHandler";
 
 export class PersonController {
   static createPerson = asyncHandler( async (req, res, next) => {
@@ -19,7 +19,20 @@ export class PersonController {
 
   static fetchPersons = asyncHandler(async (req, res, next) => {
     const showDeleted = req.query.hasOwnProperty('showDeleted') && req.query.showDeleted === "1";
-    const persons = await personService.fetchPersons({}, showDeleted);
+    const {rows: persons, count} = await personService.fetchPersons({}, showDeleted, req.query);
+    const totalPages = Math.ceil(count / (parseInt(req.query.pageSize, 10) || 10));
+
+    if (!res.hasOwnProperty('meta')) {
+      res.meta = {};
+    }
+
+    res.meta.pagination = {
+      totalItems: count,
+      totalPages,
+      currentPage: parseInt(req.query.page, 10) || 1,
+      pageSize: parseInt(req.query.pageSize, 10) || 10,
+    };
+
     res.status(200).json({persons});
   });
 

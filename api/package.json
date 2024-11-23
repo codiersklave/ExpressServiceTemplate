@@ -23,7 +23,8 @@
     "#routes/*": "./src/routes/*.js",
     "#schemas/*": "./src/schemas/*.js",
     "#services/*": "./src/services/*.js",
-    "#src/*": "./src/**/*.js"
+    "#src/*": "./src/**/*.js",
+    "#utils/*": "./src/util/*.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
