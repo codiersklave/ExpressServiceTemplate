@@ -68,8 +68,9 @@ class PersonService {
     return await db.PersonModel.findAndCountAll(options);
   }
 
-  async fetchPersonsHistory(options = {}) {
-    return await db.PersonHistoryModel.findAll(options);
+  async fetchPersonsHistory(options = {}, query = {}) {
+    options = applyPagination(query, options);
+    return await db.PersonHistoryModel.findAndCountAll(options);
   }
 
   async findPerson(id, showDeleted = false) {
@@ -82,8 +83,10 @@ class PersonService {
     return person;
   }
 
-  async findPersonHistory(id) {
-    const history = await db.PersonHistoryModel.findAll({where: {id}});
+  async findPersonHistory(id, query = {}) {
+    let options = {where: {id}};
+    options = applyPagination(query, options);
+    const history = await db.PersonHistoryModel.findAndCountAll(options);
 
     if (history.length === 0) {
       throw new NotFoundError(`No history entries found for person ${id}`);

@@ -37,8 +37,21 @@ export class PersonController {
   });
 
   static fetchPersonsHistory = asyncHandler(async (req, res, next) => {
-    const history = await personService.fetchPersonsHistory({});
-    res.status(200).json({history});
+    const {rows: persons, count} = await personService.fetchPersonsHistory({}, req.query);
+    const totalPages = Math.ceil(count / (parseInt(req.query.pageSize, 10) || 10));
+
+    if (!res.hasOwnProperty('meta')) {
+      res.meta = {};
+    }
+
+    res.meta.pagination = {
+      totalItems: count,
+      totalPages,
+      currentPage: parseInt(req.query.page, 10) || 1,
+      pageSize: parseInt(req.query.pageSize, 10) || 10,
+    };
+
+    res.status(200).json({history: persons});
   });
 
   static findPerson = asyncHandler(async (req, res, next) => {
@@ -48,7 +61,20 @@ export class PersonController {
   });
 
   static fetchPersonHistory = asyncHandler(async (req, res, next) => {
-    const history = await personService.findPersonHistory(req.params.personId);
+    const {rows: history, count} = await personService.findPersonHistory(req.params.personId, req.query);
+    const totalPages = Math.ceil(count / (parseInt(req.query.pageSize, 10) || 10));
+
+    if (!res.hasOwnProperty('meta')) {
+      res.meta = {};
+    }
+
+    res.meta.pagination = {
+      totalItems: count,
+      totalPages,
+      currentPage: parseInt(req.query.page, 10) || 1,
+      pageSize: parseInt(req.query.pageSize, 10) || 10,
+    };
+
     res.status(200).json({history});
   });
 
