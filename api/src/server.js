@@ -20,6 +20,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
 app.use(bodyParser.json());
 app.use(responseWrapper);
 app.use(apiKeyAuth);
@@ -27,10 +31,6 @@ app.use(apiKeyAuth);
 app.use(personRouter());
 app.use(userRouter());
 app.use(authRouter());
-
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
-}
 
 db.sequelize.sync().then(() => {
   app.listen(PORT, () => {
