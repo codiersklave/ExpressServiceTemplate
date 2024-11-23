@@ -21,7 +21,7 @@ export class PersonController {
   static fetchPersons = asyncHandler(async (req, res, next) => {
     const showDeleted = req.query.hasOwnProperty('showDeleted') && req.query.showDeleted === "1";
     const {rows: persons, count} = await personService.fetchPersons({}, showDeleted, req.query);
-    addPaginationMeta(req, res, count);
+    addPaginationMeta(req, res, persons, count);
     res.status(200).json({persons});
   });
 

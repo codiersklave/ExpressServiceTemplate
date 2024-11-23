@@ -5,7 +5,7 @@ import {ValidationError} from "#errors/ValidationError";
 import {PersonUpdateSchema} from "#schemas/PersonUpdateSchema";
 import dayjs from "dayjs";
 import {LogicError} from "#errors/LogicError";
-import {applyPagination} from "../util/pagination.js";
+import {applyPagination} from "#utils/pagination";
 
 class PersonService {
   async createPerson(data, user = null) {
