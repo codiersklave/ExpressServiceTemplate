@@ -1,3 +1,5 @@
-export class ValidationError extends Error {
+import {ApiError} from "#errors/ApiError";
+
+export class ValidationError extends ApiError {
   httpStatus = 400;
 }

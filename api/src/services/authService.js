@@ -11,12 +11,12 @@ class AuthService {
   async login(email, password) {
     const user = await db.UserModel.findOne({where: {email, deletedAt: null}});
     if (!user) {
-      throw new AuthError();
+      throw new AuthError('Invalid credentials or user does not exist');
     }
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-      throw new AuthError();
+      throw new AuthError('Invalid credentials or user does not exist');
     }
 
     return jwt.sign({id: user.id, email: user.email}, process.env.JWT_SECRET, {

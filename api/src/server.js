@@ -8,12 +8,12 @@ import db from "#models/index";
 // Import middlewares
 import {responseWrapper} from "#middlewares/responseWrapper";
 import {apiKeyAuth} from "#middlewares/apiKeyAuth";
-import {jwtAuth} from "#middlewares/jwtAuth";
 
 // Import routers
 import {personRouter} from "#routes/personRouter";
 import {userRouter} from "#routes/userRouter";
 import {authRouter} from "#routes/authRouter";
+import {errorHandler} from "#middlewares/errorHandler";
 
 dotenv.config();
 
@@ -31,6 +31,8 @@ app.use(apiKeyAuth);
 app.use(personRouter());
 app.use(userRouter());
 app.use(authRouter());
+
+app.use(errorHandler);
 
 db.sequelize.sync().then(() => {
   app.listen(PORT, () => {

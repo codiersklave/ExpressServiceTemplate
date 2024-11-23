@@ -1,3 +1,5 @@
-export class NotFoundError extends Error {
+import {ApiError} from "#errors/ApiError";
+
+export class NotFoundError extends ApiError {
   httpStatus = 404;
 }
