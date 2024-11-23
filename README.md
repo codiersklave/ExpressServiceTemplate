@@ -1,7 +1,6 @@
 # RESTful Web Services Template using Express.js and Sequelize
 
-This repository is a template for creating RESTful web services using Express.js and Sequelize, with a focus on a MySQL 
-database (Docker Compose) for development.
+This repository is a template for creating RESTful web services using [Express.js](https://www.npmjs.com/package/express) and [Sequelize](https://www.npmjs.com/package/sequelize). It uses [MySQL](https://www.mysql.com/) for data handling and [joi](https://www.npmjs.com/package/joi) for request validation.
 
 ## Features
 
