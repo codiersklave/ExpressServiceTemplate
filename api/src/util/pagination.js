@@ -8,3 +8,18 @@ export const applyPagination = (query, options) => {
 
   return options;
 }
+
+export const addPaginationMeta = (req, res, count) => {
+  const totalPages = Math.ceil(count / (parseInt(req.query.pageSize, 10) || 10));
+
+  if (!res.hasOwnProperty('meta')) {
+    res.meta = {};
+  }
+
+  res.meta.pagination = {
+    totalItems: count,
+    totalPages,
+    currentPage: parseInt(req.query.page, 10) || 1,
+    pageSize: parseInt(req.query.pageSize, 10) || 10,
+  };
+}

@@ -1,5 +1,6 @@
 import {personService} from "#services/personService";
 import {asyncHandler} from "#utils/asyncHandler";
+import {addPaginationMeta} from "#utils/pagination";
 
 export class PersonController {
   static createPerson = asyncHandler( async (req, res, next) => {
@@ -20,37 +21,13 @@ export class PersonController {
   static fetchPersons = asyncHandler(async (req, res, next) => {
     const showDeleted = req.query.hasOwnProperty('showDeleted') && req.query.showDeleted === "1";
     const {rows: persons, count} = await personService.fetchPersons({}, showDeleted, req.query);
-    const totalPages = Math.ceil(count / (parseInt(req.query.pageSize, 10) || 10));
-
-    if (!res.hasOwnProperty('meta')) {
-      res.meta = {};
-    }
-
-    res.meta.pagination = {
-      totalItems: count,
-      totalPages,
-      currentPage: parseInt(req.query.page, 10) || 1,
-      pageSize: parseInt(req.query.pageSize, 10) || 10,
-    };
-
+    addPaginationMeta(req, res, count);
     res.status(200).json({persons});
   });
 
   static fetchPersonsHistory = asyncHandler(async (req, res, next) => {
     const {rows: persons, count} = await personService.fetchPersonsHistory({}, req.query);
-    const totalPages = Math.ceil(count / (parseInt(req.query.pageSize, 10) || 10));
-
-    if (!res.hasOwnProperty('meta')) {
-      res.meta = {};
-    }
-
-    res.meta.pagination = {
-      totalItems: count,
-      totalPages,
-      currentPage: parseInt(req.query.page, 10) || 1,
-      pageSize: parseInt(req.query.pageSize, 10) || 10,
-    };
-
+    addPaginationMeta(req, res, count);
     res.status(200).json({history: persons});
   });
 
@@ -62,19 +39,7 @@ export class PersonController {
 
   static fetchPersonHistory = asyncHandler(async (req, res, next) => {
     const {rows: history, count} = await personService.findPersonHistory(req.params.personId, req.query);
-    const totalPages = Math.ceil(count / (parseInt(req.query.pageSize, 10) || 10));
-
-    if (!res.hasOwnProperty('meta')) {
-      res.meta = {};
-    }
-
-    res.meta.pagination = {
-      totalItems: count,
-      totalPages,
-      currentPage: parseInt(req.query.page, 10) || 1,
-      pageSize: parseInt(req.query.pageSize, 10) || 10,
-    };
-
+    addPaginationMeta(req, res, count);
     res.status(200).json({history});
   });
 
