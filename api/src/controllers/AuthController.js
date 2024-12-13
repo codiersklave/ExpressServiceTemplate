@@ -17,9 +17,9 @@ export class AuthController {
    *
    * @function login
    * @async
-   * @param {Object} req - The request object, containing `email` and `password` in the body.
-   * @param {Object} res - The response object used to send back the token.
-   * @param {Function} next - The next middleware function in the application's request-response cycle.
+   * @param {Express.Request} req - The request object.
+   * @param {Express.Response} res - The response object
+   * @param {Express.NextFunction} next - The next middleware function in the application stack.
    */
   static login = asyncHandler(async (req, res, next) => {
     const {email, password} = req.body;
